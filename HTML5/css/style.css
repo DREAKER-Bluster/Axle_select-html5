@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+body{
+	background-color:white;
+	color:black
+}
+
+
+.error{
+	background-color:red;
+	color:white
+}
+
+.div-inline{ display:inline} 
+
+h1{
+background:#ccc;
+color:#ccc;
+}
+
+	.函数图			{}
+	
+	/* 计算排布  */
+	.参数解释				{  width:24%; solid #FF6699; float:left}   	
+	.按扭矩强度初估最小轴径	{  width:28%; solid #FF6699; float:left}   
+	.齿轮已知条件及受力分析	{  width:28%; solid #FF6699; float:left}
+	.计算结果				{  width:20%; solid #FF6699; float:left}
+	
+	.滑稽提示				{  width:64%; solid #FF6699; float:left}
+	.滑稽按钮				{  width:36%; solid #FF6699; float:left}
+	
+    /* 下面是并列的三个输入框，竖排方式，div浮动自适应  */
+	.工艺参数设置输入框	{  width:25%; solid #FF6699; float:left}   	
+	.各占长度输入框		{  width:25%; solid #FF6699; float:left}   
+	.各占轴径输入框		{  width:25%; solid #FF6699; float:left}   
+	.确定平键选择框		{  width:25%; solid #FF6699; float:left}  	
+
+	/* 6组排列函数图表	 */
+	.受力分析图		{  width:33%; height:100%; solid #FF6699; float:left}   	
+	.水平面弯矩图	{  width:33%; height:100%; solid #FF6699; float:left}   
+	.垂直面弯矩图	{  width:33%; height:100%; solid #FF6699; float:left}   
+	.合成面弯矩图	{  width:33%; height:100%; solid #FF6699; float:left}   	
+	.当量弯矩图		{  width:33%; height:100%; solid #FF6699; float:left}  
+	.外伸端方向未定压轴力的附加弯矩图{  width:33%; 100%; solid #FF6699; float:left} 	
+@media screen and (max-width: 2048px) 	

@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>输入轴零件图</title>
+	</head>
+	
+ <body style="width:1024px; width:768px; background: url('../images/龙背景.gif') repeat fixed center; ">  
+	<div  style="position:relative">
+ 	<table align="center" border="0" width="1028px" height="770px" cellspacing="0" cellpadding="0" style="position:absolute;z-index:5">	
+	<tr>
+	  <td width="20%"></td>
+	  <td width="20%"></td>
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>
+	  <td rowspan="4">
+		<TABLE  height="100%" width="100%" border=1>
+			<TBODY>
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>		
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>		
+			</TBODY>
+		</TABLE>
+   </TD>
+	  </td>	
+	  
+	</tr>
+	<tr>
+	  <td width="20%"></td>
+	  <td width="20%"></td>
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>	  
+	</tr>	
+	<tr>
+	  <td width="20%"></td>
+	  <td width="20%"></td>
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>   
+	</tr>
+	<tr>
+	  <td width="20%"></td>
+	  <td width="20%"></td>
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>    
+	</tr>
+	<tr>
+	  <td width="20%"></td>
+	  <td width="20%"></td>
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>    
+	</tr>	
+	<tr>
+	
+	  <td width="20%"></td>	  
+	  <td width="20%"></td>  
+	  <td colspan="3">
+		<TABLE  height="100%" width="100%" border=1>
+			<TBODY>
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>	
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>		
+				<tr>
+				  <td width="20%"></td>
+				  <td width="20%"></td>
+				  <td width="20%"></td>	  
+				  <td width="20%"></td>	  
+				</tr>		
+			</TBODY>
+		</TABLE>
+	  </td>		  
+	</tr>	
+	</table> 
+	<!-- 上下为同级关系 -->
+    <canvas id="tab_square" width="1024px" height="768px" style="border:2px solid #222222;">
+	</canvas>	
+	<script>
+	var x=document.getElementById("tab_square");
+		var tab = tab_square.getContext("2d"); 
+		
+		<!--中心线坐标 -->
+		var center_x1=30;				
+		var center_x2=730;
+		var center_y=180;
+		
+		<!-- 轴长坐标 -->
+		var L0_real =52;				
+		var x2_real =60;
+		var x3_real =120;		
+		var x4_real =40;
+		var x5_real =30;
+		var x6_real =60;
+		var x7_real =140;
+		var x8_real =80;
+		var x9_real =80;		
+		var x10_real=85;
+		var x11_real=240;
+		
+		// 首先清空画布
+		tab.clearRect(0,0,420,220); 
+		//绘制中心轴线坐标
+		tab.strokeStyle="gray";
+		tab.lineWidth=3;
+		tab.beginPath();
+		tab.moveTo(center_x1,center_y); 
+		tab.lineTo(center_x2,center_y);  
+		tab.stroke(); 
+
+		
+		//绘制实际函数图
+		tab.strokeStyle="blue";	
+		tab.lineWidth=1;
+		tab.beginPath();
+		tab.fillStyle="rgba(30,144,255,0.5)";
+		tab.font="bold 16px Arial";   
+		tab.stroke();
+
+		tab.beginPath();
+		tab.fillRect(100,100,L0_real,160); 
+		tab.strokeRect(100,100,L0_real,160);
+
+		tab.fillRect(100+L0_real,84,x2_real,192); 
+		tab.strokeRect(100+L0_real,84,x2_real,192);
+
+		tab.fillRect(100+L0_real+x2_real,62,x3_real,236); 
+		tab.strokeRect(100+L0_real+x2_real,62,x3_real,236);  
+  
+		 
+		tab.fillRect(100+L0_real+x2_real+x3_real,100,x4_real,160); 
+		tab.strokeRect(100+L0_real+x2_real+x3_real,100,x4_real,160);
+
+		tab.fillRect(100+L0_real+x2_real+x3_real+x4_real,108,x5_real,144); 
+		tab.strokeRect(100+L0_real+x2_real+x3_real+x4_real,108,x5_real,144);
+
+		tab.fillRect(100+L0_real+x2_real+x3_real+x4_real+x5_real,120,x6_real,120); 
+		tab.strokeRect(100+L0_real+x2_real+x3_real+x4_real+x5_real,120,x6_real,120);
+
+		tab.fillRect(100+L0_real+x2_real+x3_real+x4_real+x5_real+x6_real,134,x7_real,90); 
+		tab.strokeRect(100+L0_real+x2_real+x3_real+x4_real+x5_real+x6_real,134,x7_real,90);	
+		
+		
+		
+		//空心和实心的组合
+		tab.beginPath();
+		tab.arc(570,450,50,0,360,false);
+		tab.fillStyle="grey";
+		tab.fill();
+		tab.strokeStyle="green";
+		tab.stroke();
+		tab.closePath();
+		tab.closePath();
+		tab.clearRect(600,439,30,30); 
+	</script>		
+
+</div>
+	
+	
+	
+	
+ </body>
+</html>	
+
+

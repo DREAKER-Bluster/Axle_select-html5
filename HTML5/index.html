@@ -1,0 +1,1339 @@
+<!doctype html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>输入轴设计</title>
+	<link rel="shortcut icon" type="image/x-icon" href="images/滑稽.ico" />
+	<link rel="stylesheet" href="css/style.css">
+	<div style="position:absolute; width:100%; height:100%; z-index:-1; left:0; top:0;"> <img src="images/工业线条.jpg" style="center:0; top:0;"/>
+	</div>
+	<script src="js/input.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/linkstyles.css" />
+
+
+	<p style = "margin:50px" ></p>
+	<div class="htmleaf-container">
+		<div class="container">
+			<div class="grid">
+				<div class="grid__item color-1">
+					<a class="link link--kukuri" href="#" data-letters="输入轴设计绘图">输入轴设计绘图</a>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<p style ="font-family:楷体; font-size:36px; color:black;">计算机辅助机械设计</p> 
+	<p style = "margin:236px" > </p>
+</head>
+
+ 	<script>
+		window.requestAnimFrame = (function(callback) {
+			return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+				function(callback) {
+					window.setTimeout(callback, 1000 / 60);
+				};
+		})();
+
+		var requestId, jolttime;
+
+		var c = document.getElementById('canv');
+		var $ = c.getContext('2d');
+
+		var s = 18; //grid square size
+		var mv = 10; //moving areas
+		var sp = 1; //move speed
+		var clm = 23; //columns
+		var rw = 10; //rows
+		var x = []; //x array
+		var y = []; //y array
+		var X = []; //starting X array
+		var Y = []; //starting Y array
+
+		c.width  = c.offsetWidth;
+		c.height = c.offsetHeight;
+
+		for (var i = 0; i < clm * rw; i++) {
+			x[i] = ((i % clm) - 0.5) * s;
+			y[i] = (Math.floor(i / clm) - 0.5) * s;
+			X[i] = x[i];
+			Y[i] = y[i];
+		}
+		var t = 0;
+ 
+		function jolt() {
+			$.fillRect(0, 0, c.width, c.height);
+
+			for (var i = 0; i < clm * rw; i++) {
+				if (i % clm != clm - 1 && i < clm * (rw - 1) - 1) {
+					$.fillStyle = "hsla(0,0,0,1)";
+					$.strokeStyle = "#95D384";
+					$.lineWidth = 1;
+					$.beginPath();
+					$.moveTo(x[i], y[i]);
+					$.lineTo(x[i + 1], y[i + 1]);
+					$.lineTo(x[i + clm + 1], y[i + clm + 1]);
+					$.lineTo(x[i + clm], y[i + clm]);
+					$.closePath();
+					$.stroke();
+					$.fill();
+				}
+			}
+			for (var i = 0; i < rw * clm; i++) {
+				if ((x[i] < X[i] + mv) && (x[i] > X[i] - mv) && (y[i] < Y[i] + mv) && (y[i] > Y[i] - mv)) {
+					x[i] = x[i] + Math.floor(Math.random() * (sp * 2 + 1)) - sp;
+					y[i] = y[i] + Math.floor(Math.random() * (sp * 2 + 1)) - sp;
+				} else if (x[i] >= X[i] + mv) {
+					x[i] = x[i] - sp;
+				} else if (x[i] <= X[i] - mv) {
+					x[i] = x[i] + sp;
+				} else if (y[i] >= Y[i] + mv) {
+					y[i] = y[i] - sp;
+				} else if (y[i] <= Y[i] + mv) {
+					y[i] = y[i] + sp;
+				}
+			}
+			//controls time of electric shake> when counter equals 0, it will reset for 5s then start again.
+			if (t % c.width == 0) {
+				jolttime = setTimeout('jolt()', 5);
+				t++;
+			} else {
+				jolttime = setTimeout('jolt()', 5);
+				t++;
+			}
+		}
+
+		function start() {
+			if (!requestId) {
+				requestId = window.requestAnimFrame(jolt);
+			}
+		}
+
+		function stop() {
+			if (requestId) {
+				clearTimeout(jolttime);
+				window.cancelAnimationFrame(requestId);
+				requestId = undefined;
+			}
+		}
+
+		document.querySelector('a.link--asiri').addEventListener('mouseenter', start);
+		document.querySelector('a.link--asiri').addEventListener('mouseleave', stop);
+	</script>
+	<script>
+		// For Demo purposes only (show hover effect on mobile devices)
+		[].slice.call( document.querySelectorAll('.grid a') ).forEach( function(el) {
+			el.onclick = function() { return false; }
+		} );
+	</script> 
+
+
+<body align="center" style="min-width:1536px; background: url('images/龙背景.gif') repeat fixed center; ">  
+
+
+
+  <fieldset>
+  <legend style="color:red;font-size:20px;">已知条件</legend>
+  <!-- 第一行 -->
+	<label for "round_force">圆周力Ft(N):</label>
+	<input type ="text"style="width:90px" id ="round_force" value ='3531.15'>
+
+	<label for "outside_plumb_force1">外伸端垂直力Ft0(N):</label>
+	<input type ="text" style="width:90px" id ="outside_plumb_force1">
+		
+	<label for "count_L1">L1=x2+x3+x4:</label>
+	<input type ="text" style="width:90px" id ="count_L1" value ='66'><br>
+	
+	<!-- 第二行 -->
+	<label for "y_plumb_force">径向力Fr(N):</label>
+	<input type ="text"style="width:90px" id ="y_plumb_force" value ='1311.46'>
+
+	<label for "outside_plumb_force2">外伸端垂直力Fr0(N):</label>
+	<input type ="text" style="width:90px" id ="outside_plumb_force2">
+		
+	<label for "count_L2">L2=x5+x6+x7:</label>
+	<input type ="text" style="width:90px" id ="count_L2" value ='77'><br>
+
+	<!-- 第三行 -->
+	<label for "z_plumb_force">轴向力Fa(N):</label>
+	<input type ="text"style="width:90px" id ="z_plumb_force" value ='-717.01'>
+
+	<label for "outside_plumb_force3">外伸端垂直力Fa0(N):</label>
+	<input type ="text" style="width:90px" id ="outside_plumb_force3">
+		
+	<label for "count_L3">L1=x8+x9+x10:</label>
+	<input type ="text" style="width:80px" id ="count_L3" value ='88'><br>
+	
+	<!-- 第四行 -->
+	
+	<label for "round_dia" style="text-align:left">节圆直径(mm):</label>
+	<input type ="text"style="width:120px padding:50";id ="round_dia" value ='64.285'>
+
+	<label for "outside_round_dia" style="text-align:right ">外伸端节圆直径(mm):</label>
+	<input type ="text" style="width:120px padding:5" id ="outside_round_dia"><br>
+
+	
+	<!-- 第五行 -->
+<!--   <form>	
+	<input type="radio" name="force" id="outside_undefine_force" value="1" checked>外伸端压轴力方向未定 
+	<input type ="text" style="width:90px" id ="outside_undefine_force" value ="116">
+	<input type="radio" name="force" id="outside_defined_force"  value="2">外伸端为带或链轮且受力方向已定 
+	<input type="radio" name="force" id="outside_axletree"		 value="3">外伸端为联轴器<br> 
+  </form>	
+   -->
+	<table align="center" height="100%" > 
+	 <tr>	
+	  <td>
+		<input type="radio"  name="force"   value="1" style="align: bottom;margin-left:20pt;margin-right:10pt"
+		onclick="document.getElementById('gmwp').style.display='';document.getElementById('label').style.display='' " />外伸端压轴力方向未定       
+	  </td>
+	  
+	  <td>
+		<input type="radio"  name="force"   value="1" style="align: bottom;margin-left:20pt;margin-right:10pt" 
+		onclick="document.getElementById('gmwp').style.display='none';document.getElementById('label').style.display='none';
+		document.getElementById('gmwp').value=''" />外伸端为带或链轮且受力方向已定 
+	  </td>
+	  
+	  <td>
+		<input type="radio"  name="force"   value="3" style="align: bottom;margin-left:20pt;margin-right:10pt" 
+		onclick="document.getElementById('gmwp').style.display='none';document.getElementById('label').style.display='none';
+		document.getElementById('gmwp').value=''"/>外伸端为联轴器
+	  </td>
+	</tr> 
+
+	<tr>
+	  <td>
+		<div align='center'> 
+		<label id="label" style="display:none;" >请输入尺寸：</label>
+		<input class="input_b01" type="text" name="c_guomin_name" id="gmwp" style="display:none;width:70px;" value ="116" />
+		</div>
+	 </td>	
+   </tr>
+  </table>
+	</fieldset>
+
+	
+  <div class="参数解释" align='left'>
+	<fieldset style="height:260px;">  
+		<legend style="color:red;font-size:20px;">参数解释</legend>
+		<p  style="color:red;font-size:18px;">
+		(1)扭矩与转速的正负号相同，当箭头n从下向上指为"+"<br>
+		(2)当外伸端装带轮或链轮时,Ft0或者Fr0按压轴力所产生垂直和水平分力输入<br>
+		(3)圆周力-力方向指向屏幕（纸）为正 "+"<br>
+		(4)径向力-向上为正 "+"<br>
+		(5)轴向力-对轴心取矩为顺时针为正 "+"<br></p>
+		</fieldset>
+  </div>
+ 
+  <div class="按扭矩强度初估最小轴径" align='left'>
+	<fieldset style="height:260px;">  
+		<legend style="color:red;font-size:20px;">按扭矩强度初估最小轴径</legend>
+		<p style="color:black;font-size:18px;">
+		<table >
+		 <tr>
+		     <td><label for "axle_send_power" style="text-align:left;line-height:30px;">轴传动功率(KW):</label></td>
+			  <td><input type ="text"style="width:90px;margin-left:2px;align:right;";id ="axle_send_power" value ='3.26'></td>
+		 </tr>
+		 <tr>
+			 <td><label for "axle_speed" style="text-align:right;line-height:30px;">轴的转速(r/min):</label></td>
+			  <td><input type ="text"style="width:90px;margin-left:2px;";id ="axle_speed" value ='274.26'></td>
+		</tr>
+		
+		<tr>
+			<p><td>材料：</td> 
+			  <td>
+				<select id="material" style="width:96px;height:20px;font-size:16px;">
+				<option value ="1">45</option>  
+				 <option value ="2">Q235A</option>  <!-- 最常用的碳素结构钢。 -->
+				 <option value ="3">40Cr</option>  <!-- 合金结构钢。-->
+				 <option value ="4">65Mn</option> <!--常用的弹簧钢   -->
+				<option value ="5">Cr12</option> <!-- 常用的冷作模具钢-->
+				</select>
+		     </td>
+			</p> 
+		</tr>
+		
+		<tr>
+		  <td>
+			<div class="滑稽提示";align='left'>
+			<p style="color:red;font-size:18px;">这按钮是用来计算的，不是用来滑稽的！</p></div>
+		  </td>
+		  
+		  <td>
+			<div class="滑稽按钮";align='left'>
+					<button type="button" onclick="count_radius()"><img
+					src="images/intersting.gif" alt ="计算" width="58" height="63">
+					</button>
+				</div>	
+		  </td>				
+		</tr>				
+	  </table>
+	</fieldset>
+  </div>
+		
+	<div class="齿轮已知条件及受力分析" align='left'>
+	<fieldset style="height:260px;">  
+		<legend style="color:red;font-size:20px;">齿轮已知条件及受力分析</legend>
+		<p style="color:black;font-size:18px;">
+		<table  >
+		    <tr>
+			  <td>
+				<label for "circle_diameter">节圆直径:(mm)</label>
+			  </td>
+			  
+			  <td>
+				&nbsp;&nbsp;<input type ="text" style="width:80px" id ="circle_diameter" value ="88">
+			  </td>
+			</tr>
+			
+			<tr>
+			  <td>
+				<label for "spire_rad">螺旋角:(°)</label>
+			  </td>
+			  
+			  <td>
+				&nbsp;&nbsp;<input type ="text" style="width:80px" id ="spire_rad" value ="11.478">
+			  </td>
+			</tr>
+			<tr>
+			
+			<tr>
+			  <td>
+				<label for "sprain_square">扭矩:(N·m)</label>
+			  </td>
+			  
+			  <td>
+				&nbsp;&nbsp;<input type ="text" style="width:80px" id ="sprain_square" value ="-403.65">
+			  </td>
+			</tr>
+
+			<tr>
+			  <td>
+				<label for "plumb_pressure_angle">法向压力角:(°)</label>
+			  </td>
+			  
+			  <td>
+				&nbsp;&nbsp;<input type ="text" style="width:80px" id ="plumb_pressure_angle" value ="20">
+			  </td>
+			</tr>			
+			
+			<tr>
+				<td><input type="checkbox" name="cone_force" value="圆锥齿轮传动" />圆锥齿轮传动
+				</td>
+				<td>&nbsp;&nbsp;<button type="button" onclick="count_radius()"><img
+					src="images/滑稽挑眉.gif" alt ="计算(已知条件)" width="64" height="64">
+					</button>
+					<p style="font-size:12px">计算已知条件</p>
+				</td>   
+			</tr>	
+		</table>	
+	  </fieldset>	
+	</div>
+ 
+	
+	
+	<div class="计算结果" align='left'>
+	<fieldset style="height:260px;">  
+		<legend style="color:red;font-size:20px;">计算结果</legend>
+		<table width="260" >
+		<p  style="color:black;font-size:18px;">
+			<tr>
+			  <td>
+				<label for "sprain_square_resault">扭矩:(N·m)</label>
+			  </td>
+			  
+			  <td>
+				<input type ="text" style="width:80px" id ="sprain_square_resault" value ="-403.65" disabled="disabled">
+			  </td>
+			</tr>
+
+			<tr>
+			  <td>
+				<label for "min_diameter">最小直径:(mm)</label>
+			  </td>
+			  
+			  <td>
+				<input type ="text" style="width:80px" id ="min_diameter" value ="40.95" disabled="disabled">
+			  </td>
+			</tr>
+		</table>
+	</fieldset>	
+	</div>
+
+ 
+   <!-- 以下为绘制的轴示意图，仅用于展示尺寸（鼠标停留直接显示参数） -->
+   <fieldset>
+	 <legend style="color:red;font-size:20px;">输入轴的结构参数(mm)</legend>
+<canvas id="myCanvas" width="660" height="440"><!-- style="border:1px solid #d3d3d3;" -->
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+
+<script>
+
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+
+ctx.fillStyle="rgba(30,144,255,0.5)";
+ctx.font="bold 16px Arial";   
+
+ctx.fillRect(100,100,72,160); 
+ctx.strokeRect(100,100,72,160);
+ctx.fillText("L0", 108, 356);  
+ctx.fillText("X2", 144, 356); 
+
+ 
+ctx.fillRect(172,84,30,192); 
+ctx.strokeRect(172,84,30,192);
+ctx.fillText("X3", 176, 356); 
+
+
+ctx.fillRect(202,62,90,236); 
+ctx.strokeRect(202,62,90,236);  
+ctx.fillText("X4", 218, 356);   
+ctx.fillText("X5", 258, 356); 
+
+
+ 
+ctx.fillRect(292,100,64,160); 
+ctx.strokeRect(292,100,64,160);
+ctx.fillText("X6", 314, 356); 
+
+
+ctx.fillRect(356,108,70,144); 
+ctx.strokeRect(356,108,70,144);
+ctx.fillText("X7", 364, 356);
+ctx.fillText("X8", 399, 356);
+
+
+ctx.fillRect(426,120,48,120); 
+ctx.strokeRect(426,120,48,120);
+ctx.fillText("X9", 440, 356);
+
+
+ctx.fillRect(474,134,80,90); 
+ctx.strokeRect(474,134,80,90);
+ 
+ctx.fillText("X10", 481, 356);
+ctx.fillText("L11", 521, 356);
+
+
+ctx.strokeStyle ='black';
+ctx.beginPath();
+ctx.moveTo(60,180); 
+ctx.lineTo(600,180); 
+ctx.save();
+ctx.stroke(); 
+
+ctx.strokeStyle ='blue';  
+ctx.beginPath(); 
+ctx.moveTo(100,180); 
+ctx.lineTo(100,360);  
+ctx.moveTo(136,180); 
+ctx.lineTo(136,360); 
+ctx.moveTo(172,180); 
+ctx.lineTo(172,360); 
+ctx.moveTo(202,180); 
+ctx.lineTo(202,360);
+ctx.moveTo(247,180); 
+ctx.lineTo(247,360); 
+ctx.moveTo(292,180); 
+ctx.lineTo(292,360); 
+ctx.moveTo(356,180); 
+ctx.lineTo(356,360);
+ctx.moveTo(391,180); 
+ctx.lineTo(391,360);
+ctx.moveTo(426,180); 
+ctx.lineTo(426,360);
+ctx.moveTo(474,180); 
+ctx.lineTo(474,360);
+ctx.moveTo(514,180); 
+ctx.lineTo(514,360); 
+ctx.moveTo(554,180); 
+ctx.lineTo(554,360); 
+ctx.moveTo(100,360); 
+ctx.lineTo(554,360);  
+ctx.stroke(); 
+ctx.save();  
+ 
+
+ctx.font="bold 16px Light";      
+ctx.fillStyle="rgba(112,128,105,1)";
+ctx.fillText("1", 130, 380);
+ctx.fillText("2", 166, 380); 
+ctx.fillText("3", 196, 380); 
+ctx.fillText("4", 241, 380); 
+ctx.fillText("5", 286, 380); 
+ctx.fillText("6", 350, 380); 
+ctx.fillText("7", 385, 380); 
+ctx.fillText("8", 420, 380); 
+ctx.fillText("9", 468, 380); 
+ctx.fillText("10", 506, 380);    
+ctx.save();   
+ctx.stroke(); 
+</script>
+<br>
+<select style=id="wheel_modle" "width:170px;height:26px;font-size:16px;">  
+  <option value ="1">主动齿轮与轴为一体</option>  
+  <option value ="2">小齿轮装配在轴上</option>  
+  <option value="3">小齿轮与轴为一体</option>  
+  <option value="4" disabled="disabled">๑乛◡乛๑啦啦啦，让你看，就是不让你选(•‾̑⌣‾̑•)✧˖°</option>
+</select>
+	<br>注：当主动齿轮与轴一体时d4按分度圆直径输入
+   </fieldset>    
+
+ 
+	<div class="工艺参数设置输入框">
+	<fieldset style="height:380px;">  
+		<legend style="color:red;font-size:20px;">工艺处理及参数设置</legend>
+		<P class=MsoNormal style="FONT-SIZE: 18pt; LINE-HEIGHT: 30pt;text-align:left">
+		
+		<p>材料及热处理：<select id="fire_task"  style="width:100px;height:26px;font-size:16px;margin-left:32px;> 
+		<option value ="1">45调质</option>  
+		<option value ="2">退火</option>  
+		<option value ="3">正火</option>  
+		<option value ="4">淬火</option> 
+		<option value ="5">回火</option> 
+		</option>
+		</select>	</p>
+	
+		<p>轴端中心孔：<select id="axle_size" style="width:100px;height:26px;font-size:16px;margin-left:50px;"> 
+		<option value ="1">B4/12.5</option>  
+		<option value ="2">此处添加（崔男男）</option>  
+		<option value ="3">此处添加（崔男男）</option>  
+		<option value ="4">此处添加（崔男男）</option> 
+		<option value ="5">此处添加（崔男男）</option> 
+		</option>
+		</select>	</p>
+	
+		<p>精确校核处配合：<select id="exact_concert" style="width:100px;height:26px;font-size:16px;margin-left:10px;"> 
+		<option value ="1">H7/r6</option>  
+		<option value ="2">H7/r7</option>  
+		<option value ="3">H7/r8</option>  
+		<option value ="4">H6/r7</option> 
+		<option value ="5">H6/r8</option> 
+		</option>
+		</select>	</p>
+
+		<p>精确校核处加工：<select id="exact_machining" style="width:100px;height:26px;font-size:16px;margin-left:10px;"> 
+		<option value ="1">磨削</option>  
+		<option value ="2">铣削</option>  
+		<option value ="3">车削</option>  
+		<option value ="4">刨削</option> 
+		</option>
+		</select>	</p>
+
+		<p>应力校正系数：<select id="exact_regulate" style="width:100px;height:26px;font-size:16px;margin-left:35px;"> 
+		<option value ="1">0.59</option>  
+		<option value ="2">0.3</option>  
+		<option value ="3">0.6</option>  
+		<option value ="4">1.0</option> 
+		
+		</select>	</p>
+		</fieldset> 
+	</div> 
+   
+	
+	<div class="各占长度输入框">
+		<fieldset style="height:380px;">
+		  <legend style="color:red;font-size:20px;">各占长度</legend>
+			<P class=MsoNormal style="FONT-SIZE: 18pt; LINE-HEIGHT: 25pt text-align:left;">
+
+			<label for "L0_value">L0:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="L0_value" value ="9.5"><br>
+
+			<label for "x2_value">x2:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x2_value" value ="9.5"><br>
+
+			<label for "x3_value">x3:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x3_value" value ="22.5"><br>
+
+			<label for "x4_value">x4:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x4_value" value ="34"><br>
+
+			<label for "x5_value">x5:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x5_value" value ="34"><br>
+
+			<label for "x6_value">x6:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x6_value" value ="22.5"><br>
+
+			<label for "x7_value">x7:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x7_value" value ="9.5"><br>
+
+			<label for "x8_value">x8:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x8_value" value ="9.5"><br>
+
+			<label for "x9_value">x9:</label>
+			<input type ="text"style="width:90px;margin-left:12px;" id ="x9_value" value ="38.5"><br>
+
+			<label for "x10_value">x10:</label>
+			<input type ="text"style="width:90px;margin-left:0px;" id ="x10_value" value ="40"><br>
+
+			<label for "L11_value">L11:</label>
+			<input type ="text"style="width:90px;margin-left:0px;" id ="L11_value" value ="40"><br>
+			</P>
+		</fieldset>	
+	</div> 
+	
+	
+	<div class="各占轴径输入框">
+		<fieldset style="height:380px;"> 
+			<legend style="color:red;font-size:21px;">各占轴径</legend>	
+			<P class=MsoNormal style="FONT-SIZE: 18pt; LINE-HEIGHT: 25pt text-align:left;">
+			
+			
+			<label for "d1_value">d1:</label>
+			<input type ="text"style="width:75px;margin-left:72px;" id ="d1_value" value ="45"><br>
+
+			<label for "d2_value">d2:</label>
+			<input type ="text"style="width:75px;margin-left:72px;" id ="d2_value" value ="49"><br>
+
+			<label for "d3_d4_value">d3,d4:</label>
+			<input type ="text"style="width:75px;margin-left:36px;" id ="d3_d4_value" value ="64.285"><br>
+
+			<label for "d5_value">d5:</label>
+			<input type ="text"style="width:75px;margin-left:72px;" id ="d5_value" value ="49"><br>
+
+			<label for "d6_d7_value">d6,d7:</label>
+			<input type ="text"style="width:75px;margin-left:36px;" id ="d6_d7_value" value ="45"><br>
+
+			<label for "d8_value">d8:</label>
+			<input type ="text"style="width:75px;margin-left:72px;" id ="d8_value" value ="44"><br>
+
+			<label for "d9_d10_value">d9,d10:</label>
+			<input type ="text"style="width:75px;margin-left:24px;" id ="d9_d10_value" value ="38"><br>
+
+			<label for "turned_axle">轴端倒角:</label>
+			<input type ="text"style="width:75px;margin-left:0px;" id ="turned_axle" value ="2"><br>
+
+			<label for "round_radius">圆角半径:</label>
+			<input type ="text"style="width:75px;margin-left:0px;" id ="round_radius" value ="1.6"><br>			
+		</fieldset>
+	</div> 
+	
+	<div class="确定平键选择框">
+		<fieldset style="height:380px;">  
+		<legend style="color:red;font-size:21px;">确定平键</legend>	
+		<p>轴端中心孔：<select id="axle_size" style="width:100px;height:26px;font-size:16px;margin-left:3px;"> 
+		<option value ="1">轻微冲击 </option>
+		<option value ="2">钻孔加工</option>  
+		<option value ="3">铣削加工</option>  
+		<option value ="4">刨削加工</option> 
+		<option value ="5">磨削加工</option> 		
+		</select>	</p>
+		
+		  <p style="FONT-SIZE: 16pt;color:blue; text-align:left;">d4计算结果：</p>
+			<label for "Fb_d4_ID" style="line-height:25px;margin-left:-80px ";>Fb(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="Fb_d4_ID" value="89"><br>		
+		
+			<label for "Ft_d4_ID" style="line-height:25px;margin-left:-80px">Ft(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="Ft_d4_ID" ><br>		
+		
+			<label for "d4_leagth_ID" style="line-height:25px;margin-left:-70px">键长(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="d4_leagth_ID" ><br>
+
+		  <p style="FONT-SIZE: 16pt;color:blue; text-align:left;">d10计算结果：</p>
+			<label for "Fb_d10_ID" style="line-height:25px;margin-left:-80px";>Fb(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="Fb_d10_ID" value="89"><br>		
+		
+			<label for "Ft_d10_ID" style="line-height:25px;margin-left:-80px">Ft(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="Ft_d10_ID" ><br>		
+		
+			<label for "d10_leagth_ID" style="line-height:25px;margin-left:-70px">键长(d4站):</label>
+			<output type ="text"style="width:90px;margin-right:0px;" id ="d10_leagth_ID" ><br>			
+		</fieldset>
+	</div> 
+ 
+ 
+ 
+ 	<style>
+	.截面与应力配合	{  width:23%; solid #FF6699;float:left;border-style:dotted solid;}   	
+	.系数应力值		{  width:75%; solid #FF6699;float:right;font-size:28px;font-family:黑体;margin-top:20;}   
+	.表格框输入格式 {width:75px;height:28px;font-size:22px;margin-left:0px; }
+	</style>
+ 
+	
+		<fieldset>  
+		 <legend style="color:red;font-size:20px;">按安全系数法进行精确校核</legend>
+		  <div class="截面与应力配合" style="height:230px;">
+		  
+			<p>危险截面位置：<select id="exact_machining" style="width:100px;height:26px;font-size:16px;margin-left:10px;"> 
+				<option value ="1">6(R)</option>  
+				<option value ="2">1(R)</option>  
+				<option value ="3">4(R)</option>  
+				<option value ="4">7(R)</option> 
+				<option value ="5">2(R)</option> 
+				</select>	
+			</p>			
+			
+			<P style="FONT-SIZE: 16pt; text-align:center;">选择应力集中原因:&nbsp;&nbsp;&nbsp;</p>
+	      <div style="text-align:center";>
+		    <form>			
+				 <input type="radio" name="tension_reason" value="1" checked>按紧配合&nbsp;&nbsp;&nbsp;&nbsp;<br> 
+					<input type="radio" name="tension_reason" value="2">按过渡圆角&nbsp;&nbsp;<br>
+					<input type="radio" name="tension_reason" value="3">按键槽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+					<input type="radio" name="tension_reason" value="4">按渐开线花键<br>			  	
+			</form>	
+		  </div>
+		</div>
+
+		 <div class="系数应力值" >
+		 
+		  <table style="font-family'MS UI Gothic' font-size30px" align="center" width="90%" height="230" >
+			<tr>
+				<td><label for "σB_ID">σB:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="σB_ID" value ="640">
+				</td>
+				
+				<td><label for "qσ_ID">qσ:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="qσ_ID" >
+				</td>
+
+				<td><label for "βσ_ID">βσ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="βσ_ID" value ="0.92">
+				</td>
+			</tr>
+		  
+			<tr>
+				<td><label for "σ1_ID">σΓ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="σ1_ID" value ="275">
+				</td>
+				
+				<td><label for "qτ_ID">qτ:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="qσ_ID" >
+				</td>
+
+				<td><label for "Κσ_ID">σΓ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Κσ_ID" value ="3.41">
+				</td>
+
+			
+			</tr>
+
+			<tr>
+				<td><label for "τ1_ID">τ1:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="τ1_ID" value ="155">
+				</td>
+				
+				<td><label for "κσ_ID">κσ:&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="κσ_ID" >
+				</td>
+
+				<td><label for "Kτ_ID">Kτ:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Kτ_ID" value ="2.66">
+				</td>
+		
+			</tr>
+
+			<tr>
+				<td><label for "σb_ID">σb:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="σb_ID" value ="12.66">
+				</td>
+				
+				<td><label for "κτ_ID">κτ:&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="κτ_ID">
+				</td>
+
+				<td><label for "Ψσ_ID">Ψσ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Ψσ_ID" value ="0.15">
+				</td>
+
+		
+			</tr>
+
+			<tr>
+				<td><label for "τΓ_ID">τΓ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="τΓ_ID" value ="6.34">
+				</td>
+				
+				<td><label for "cσ_ID">cσ:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="cσ_ID">
+				</td>
+
+				<td><label for "Ψτ_ID">Ψτ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Ψτ_ID" value ="0.08">
+				</td>
+
+			
+			</tr>
+	
+			<tr>
+				<td><label for "βq_ID">βq:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="βq_ID" value ="1">
+				</td>
+				
+				<td><label for "cτ_ID">cτ:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="cτ_ID">
+				</td>
+
+				<td><label for "Sσ_ID">Sσ:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Sσ_ID" value ="6.35">
+				</td>
+
+			
+			</tr>
+
+			<tr>
+				<td><label for "ασ_ID">ασ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="ασ_ID" >
+				</td>
+				
+				<td><label for "kσ/cσ_ID">kσ/cσ:</label>
+					<input type ="text"class="表格框输入格式" id ="kσ/cσ_ID" value ="3.32">
+				</td>
+
+				<td><label for "Sτ_ID">Sτ:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="Sτ_ID" value ="17.81">
+				</td>
+
+		
+			</tr>
+
+			<tr>
+				<td><label for "ατ_ID">ατ:&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="κσ_ID">
+				</td>
+				
+				<td><label for "kτ/cτ_ID">kτ/cτ:</label>
+					<input type ="text"class="表格框输入格式" id ="κσ_ID" value ="2.57">
+				</td>
+
+				<td><label for "Sca_ID">Sca:&nbsp;&nbsp;</label>
+					<input type ="text"class="表格框输入格式" id ="κσ_ID" value ="5.98">
+				</td>
+				
+			</tr>			
+		</table>
+	   </div>
+	   
+	    <div class="系数应力值"> 
+		<table align="center" width="70%" height="130" style = "margin:20px"  >
+				<td><button type="button" onclick="axle_foce_draw()"><img
+					src="images/单纯.gif" alt ="画轴的受力简图" width="76" height="76">
+					</button>
+				</td>
+				
+				<td><button type="button" onclick="what_fuck()"><img
+					src="images/好流弊哦.gif" alt ="这写的啥？我看不清！" width="88" height="78">
+					</button>
+				</td>
+
+				<td><button type="button" onclick="safe_check()"><img
+					src="images/仓鼠抖腿.gif" alt ="按安全系数法校核" width="76" height="76">
+					</button>
+				</td>				
+				
+			<tr>	
+				<td><p style="FONT-SIZE: 16pt;color:blue; text-align:center;">画轴的受力简图</p>
+				</td>
+
+				<td><p style="FONT-SIZE: 16pt;color:yellow; text-align:center;">这写的啥？我看不清！</p>
+				</td>
+
+				<td><p style="FONT-SIZE: 16pt;color:blue; text-align:center;">按安全系数法校核</p>
+				</td>				
+			</tr>		 
+
+		   </table>
+ 		</fieldset>
+		
+	<style>
+	.竖排框输入格式 {width:75px;height:20px;font-size:16px;text-align:right;}
+	</style>
+		
+		<fieldset style="border:0">	
+		  <table align="center" border="1" width="100%" height="130"   border="0" cellspacing="0" cellpadding="0">
+			<tr>
+			  <td>
+				 <table align="center" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						
+						 <p style="FONT-SIZE: 16pt;color:blue; text-align:center;">计算结果：</p>
+						<label for "out_undef_power_ID">外伸端方向未定压轴力的附加弯矩(第七站处)(N·m):</label>
+						<input type ="text"style="width:90px;font-size:22px"; id ="out_undef_power_ID" value ="102.08"><br>
+						
+						<label for "count_undef_power_ID"><p style="FONT-SIZE: 16pt;heigh：22px; color:black; text-align:center;">扭矩(N·m):</label>
+						<input type ="text";height="130"style="font-size:22px; width:90px"; id ="count_undef_power_ID" value ="113.499"></p>
+												
+					</tr>
+					
+				
+					<tr>
+						<td>
+						   <table align="center" width="190px">
+						   <p style="FONT-SIZE: 16pt;color:blue; text-align:center;">支反力(N)：</p>
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "RAh_value">RAh:&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="RAh_value" value ="-481.14"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "RAv_value">RAv:&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="RAv_value" value ="-1765.58"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "RBh_value">RBh:&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="RBh_value" value ="-830.33"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "RBv_value">RBv:&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="RBv_value" value ="-1765.58"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "RA_value">RA:&nbsp;&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="RA_value" value ="1829.95"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "RB_value">RB:&nbsp;&nbsp;&nbsp;</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="RB_value" value ="1951.07"><br></td>
+								  </tr>
+								 </p>	
+						   </table>	
+						</td>
+						
+						<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</td>						
+						
+						<td>
+						   <p style="FONT-SIZE: 16pt;color:blue; text-align:center;">允许最小轴径(mm)：</p>
+						   <table align="center" width="190px">
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "d1_axle_value">d1</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="d1_axle_value" value ="0"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d2_axle_value">d2</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="d2_axle_value" value ="16.67"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d3_axle_value">d3</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="d3_axle_value" value ="24.99"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d4_axle_value">d4</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="d5_axle_value" value ="33.01"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d5_axle_value">d5</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d5_axle_value" value ="30.74"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d6_axle_value">d6</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d6_axle_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d7_axle_value">d7</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d7_axle_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "d8_axle_value">d8</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d8_axle_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "d9_axle_value">d9</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d9_axle_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "d10_axle_value">d10</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="d10_axle_value" value ="1951.07"><br></td>
+								  </tr>								  
+								 </p>	
+						   </table>					
+						</td>
+					  </td>
+					</tr>
+				 </table>
+			  </td>
+			  
+			  <td>
+				 <table align="center" width="280px" border="0"  cellspacing="0" cellpadding="0">
+					<tr>						
+						 <p style="FONT-SIZE: 16pt;color:blue; text-align:center;">水平面及垂直面弯矩(N·m)：</p>												
+					</tr>
+					
+					<tr>
+						<td>
+						   <table align="center" width="190px">
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "Mh1_square_value">Mh1</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mh1_square_value" value ="0"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh2_square_value">Mh2</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mh2_square_value" value ="16.67"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh3_square_value">Mh3</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mh3_square_value" value ="24.99"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh4(L)_square_value">Mh4(L)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mh4(L)_square_value" value ="33.01"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mh4(R)_square_value">Mh4(R)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mh4(R)_square_value" value ="33.01"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh5_square_value">Mh5</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh5_square_value" value ="30.74"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh6_square_value">Mh6</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh6_square_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh7_square_value">Mh7</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh7_square_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mh8_square_value">Mh8</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh8_square_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mh9_square_value">Mh9</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh9_square_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mh10_square_value">Mh10</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mh10_square_value" value ="1951.07"><br></td>
+								  </tr>								  
+								 </p>	
+						   </table>	
+						</td>
+						
+						<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</td>
+						
+						<td>
+						   <table align="center" width="190px">
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "Mv1_square_ID">Mv1</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mv1_square_ID" value ="0"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv2_square_ID">Mv2</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mv2_square_ID" value ="16.67"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv3_square_ID">Mv3</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mv3_square_ID" value ="24.99"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv4_square_ID">Mv4</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mv4_square_ID" value ="33.01"><br></td>
+								  </tr>
+
+								  <tr>
+									<td>&nbsp;&nbsp;</td>
+									<td>&nbsp;&nbsp;</td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv5_square_ID">Mv5</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv5_square_ID" value ="30.74"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv6_square_ID">Mv6</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv6_square_ID" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv7_square_ID">Mv7</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv7_square_ID" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mv8_square_ID">Mv8</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv8_square_ID" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mv9_square_ID">Mv9</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv9_square_ID" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mv10_square_ID">Mv10</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mv10_square_ID" value ="1951.07"><br></td>
+								  </tr>								  
+								 </p>	
+						   </table>					
+						</td>
+					  </td>
+					</tr>
+				 </table>
+			  
+			  </td>			  
+			  
+			  <td>
+				 <table align="center" width="280px" border="0"  cellspacing="0" cellpadding="0">
+					<tr>						
+						 <p style="FONT-SIZE: 16pt;color:blue; text-align:center;">水平面及垂直面弯矩(N·m)：</p>												
+					</tr>
+					
+					<tr>
+						<td>
+						   <table align="center" width="190px">
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "M1_square_value">M1</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="M1_square_value" value ="0"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M2_square_value">M2</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="M2_square_value" value ="16.67"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M3_square_value">M3</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="M3_square_value" value ="24.99"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M4(L)_square_value">M4(L)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="M4(L)_square_value" value ="33.01"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "M4(R)_square_value">M4(R)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="M4(R)_square_value" value ="33.01"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M5_square_value">M5</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M5_square_value" value ="30.74"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M6_square_value">M6</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M6_square_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M7_square_value">M7</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M7_square_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "M8_square_value">M8</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M8_square_value" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "M9_square_value">M9</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M9_square_value" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "M10_square_value">M10</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="M10_square_value" value ="1951.07"><br></td>
+								  </tr>								  
+								 </p>	
+						   </table>	
+						</td>
+						
+						<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</td>
+						
+						<td>
+						   <table align="center" width="190px">
+								<p style="FONT-SIZE: 16pt;color:BLACK; text-align:left;">
+						   		  <tr>	
+									<td><label for "Mca_square_ID">Mca1</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mca1_square_ID" value ="0"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca2_square_ID">Mca2</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mca2_square_ID" value ="16.67"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca3_square_ID">Mca3</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mca3_square_ID" value ="24.99"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mca4(L)_square_value">Mca4(L)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mca4(L)_square_value" value ="33.01"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mca4(R)_square_value">Mca4(R)</label></td>
+									<td><input type ="text"class="竖排框输入格式" id ="Mca4(R)_square_value" value ="33.01"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca5_square_ID">Mca5</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca5_square_ID" value ="30.74"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca6_square_ID">Mca6</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca6_square_ID" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca7_square_ID">Mca7</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca7_square_ID" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mca8_square_ID">Mca8</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca8_square_ID" value ="1951.07"><br></td>
+								  </tr>
+								  
+								  <tr>
+									<td><label for "Mca9_square_ID">Mca9</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca9_square_ID" value ="1951.07"><br></td>
+								  </tr>
+
+								  <tr>
+									<td><label for "Mca10_square_ID">Mca10</label></td>
+									<td><input type ="text"class="竖排框输入格式"  id ="Mca10_square_ID" value ="1951.07"><br></td>
+								  </tr>								  
+								 </p>	
+						   </table>					
+						</td>
+					  </td>
+					</tr>
+				 </table>			  
+			  
+			  </td>
+			  
+			</tr>
+
+			
+		  </table>
+
+		  <table align="center" width="90%" height="130" style = "margin:20px"  >
+				<td><button type="button" onclick="main_axle_add_draw()"><img
+					src="images/蹦跶.gif" alt ="画输入轴零件图" width="180" height="180"
+					</button>
+				</td>
+				
+				<td><a href="#forced_pic"><button type="button" onclick="draw_force_diagram(2)"><img
+					src="images/一起摇摆.gif" alt ="受力函数图" width="240" height="180">
+					</button></a>
+				</td>
+
+				<td><button type="button" onclick="return_main_windows()"><img
+					src="images/啪啪啪.gif" alt ="返回主窗体" width="180" height="150">
+					</button>
+				</td>				
+ 
+			<tr>	
+				<td><p style="FONT-SIZE: 20pt;color:blue; text-align:center;">画输入轴零件图</p>
+				</td>
+
+				<td><p style="FONT-SIZE: 20pt;color:blue; text-align:center;">受力函数图</p>
+				</td>
+
+				<td><p style="FONT-SIZE: 20pt;color:blue; text-align:center;">返回主窗体</p>
+				</td>
+				
+			</tr>		 
+		  </table>		  
+ 		</fieldset>		
+		
+	<style>
+  	
+	</style>
+
+
+  <div id="forced_pic" style="display:none;">	
+	<div class="受力分析图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">受力分析图</legend>	
+		<img src="images/受力简图.png" width="draw_width" height="220px" />
+		</fieldset>  
+	</div>
+
+	
+	<div class="水平面弯矩图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">水平面弯矩图</legend>	
+		<canvas id="x_square" width="420" height="220px"><!-- style="border:1px solid #d3d3d3;" -->
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>
+		</fieldset>  
+	</div>	
+
+	
+	<div class="垂直面弯矩图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">垂直面弯矩图</legend>	
+		<canvas id="y_square" width="420" height="220px"><!-- style="border:1px solid #d3d3d3;" -->
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>	
+		</fieldset>  
+	</div>
+
+
+	<div class="合成面弯矩图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">合成面弯矩图</legend>	
+		<canvas id="xy_square" width="420" height="220px"><!-- style="border:1px solid #d3d3d3;" -->
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>			
+		</fieldset>  
+	</div>	
+	
+	
+	<div class="当量弯矩图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">当量弯矩图</legend>	
+		<canvas id="s_square" width="420" height="220px">
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>
+		</fieldset>  
+	</div>	
+	
+
+	<div class="外伸端方向未定压轴力的附加弯矩图">
+		<fieldset>  
+		<legend style="color:red;font-size:21px;">外伸端方向未定压轴力的附加弯矩图</legend>	
+		<canvas id="h_square" width="420" height="220px"><!-- style="border:1px solid #d3d3d3;" -->
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>		
+		</fieldset>  
+	</div>	
+  </div>	
+</body>
+</html>
